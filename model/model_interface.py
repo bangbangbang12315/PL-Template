@@ -11,7 +11,7 @@ import inspect
 import pytorch_lightning as pl
 from torch.nn import functional as F
 from transformers import AdamW, get_linear_schedule_with_warmup
-from utils import calculate_acc
+from .utils import calculate_acc
 
 class MInterface(pl.LightningModule):
     def __init__(self, model_name, loss, lr, **kargs):
@@ -23,7 +23,7 @@ class MInterface(pl.LightningModule):
     def forward(self, input_ids=None):
         return self.model(input_ids)
 
-    def training_step(self, batch, batch_idx, optimizer_idx):
+    def training_step(self, batch, batch_idx):
         #train generator
         input_ids = batch["input_ids"]
         outputs = self(input_ids)
@@ -37,7 +37,7 @@ class MInterface(pl.LightningModule):
         loss = outputs.loss
         logits = outputs.logits
         n_correct, n_word = calculate_acc(logits, input_ids, ignore_index=0)
-        self.log('val_loss', loss, 'val_acc', n_correct / n_word,
+        self.log('val_acc', n_correct / n_word,
                  on_step=False, on_epoch=True, prog_bar=True)
         return loss
 

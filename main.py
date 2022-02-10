@@ -25,10 +25,10 @@ def load_callbacks():
     # ))
 
     callbacks.append(plc.ModelCheckpoint(
-        monitor='val_loss',
-        filename='best-{epoch:02d}-{val_loss:.3f}',
+        monitor='val_acc',
+        filename='best-{epoch:02d}-{val_acc:.3f}',
         save_top_k=5,
-        mode='min',
+        mode='max',
         save_last=True
     ))
 
